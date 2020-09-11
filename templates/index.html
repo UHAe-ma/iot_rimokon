@@ -1,12 +1,37 @@
 {% extends "layout.html" %}
 {% block content %}
+
+<script type=text/javascript>
+	$(function() {
+	  $('a#ac_on').bind('click', function() {
+		$.getJSON('/ac_on',
+			function(data) {
+		  //do nothing
+		});
+		return false;
+	  });
+	  $('a#ac_off').bind('click', function() {
+		$.getJSON('/ac_off',
+			function(data) {
+		  //do nothing
+		});
+		return false;
+	  });
+});
+</script>
+
 <div class="panel panel-head">
 	<h1>IoTリモコン</h1>
 </div>
 <div class="panel panel-body">
+	
+	<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
+	<a href=# id=ac_off><button class='btn btn-default' value="1">エアコンＯＦＦ</button></a>
+
 	<div class="container"> 
 		<div class="row">
 			<div class="col-md-6">
+
 				<canvas id="myPieChart" width=200px height=300px></canvas>
 				<script>
 /*Chart.jsに*/

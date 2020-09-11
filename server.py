@@ -1,11 +1,19 @@
-from flask import Flask,render_template,jsonify,request
+from flask import Flask,render_template,jsonify,request,flash
 import peewee
 import os
 import datetime
+import requests
+import json
 
 #初期設定
 app = Flask(__name__)
+app.secret_key = 'hogehoge'
 DIFF_JST_FROM_UTC = 9
+
+proxies = {
+    "http": None,
+    "https": None,
+}
 
 # SQLiteDBの生成
 db=None
@@ -80,9 +88,11 @@ def check():
         # データを保存
         v.save()
 
+        # データを表示
         for room in RoomInfo.select():
             print(room.recdate, room.temperature)
-
+        
+        flash('データを受信しました')
         result = "OK"
 
     except Exception as e:
@@ -104,7 +114,7 @@ def index():
     f=0
 
     try:
-        # 換気情報で、各値が0以外の最新データ1件目を取得する.
+        # 室内情報で、温度と湿度が0以外の最新データ1件目を取得する.
         roomlist = RoomInfo.select().where(
                 (RoomInfo.humidity > 0) &
                 (RoomInfo.temperature > 0) 
@@ -112,7 +122,7 @@ def index():
     except RoomInfo.DoesNotExist:
         abort(404)
 
-    # データがあれば、三密指数を計算する.
+    # データがあれば、計算する.
     if len(roomlist) > 0:
         v = roomlist[0]
         h=v.humidity
@@ -137,7 +147,39 @@ def good():
     return name
 
 
+# JSONを受信,データベースに登録
+@app.route('/getjson', methods=['POST'])
+def getjson():
+    data = request.json
+    print(data)
+    return "nothing"
 
+
+# データを送信
+@app.route('/ac_on')
+def ac_on():
+    print("AC_ON")
+    jsonData = {
+        "power":"ON",
+        'time':24
+    }
+    print(jsonData)
+    response = requests.post('http://127.0.0.1:3000/getjson/' , json=json.dumps(jsonData),proxies=proxies)
+    print(response)
+    return "nothing" 
+
+# データを送信
+@app.route('/ac_off')
+def ac_off():
+    print("AC_OFF")
+    jsonData = {
+        "power":"OFF",
+        'time':24
+    }
+    print(jsonData)
+    response = requests.post('http://127.0.0.1:3000/getjson/' , json=json.dumps(jsonData),proxies=proxies)
+    print(response)
+    return "nothing" 
 
 # サービス起動
 if __name__ == '__main__':
