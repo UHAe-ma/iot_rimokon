@@ -1,0 +1,96 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="panel panel-head">
+	<h1>IoTリモコン</h1>
+</div>
+<div class="panel panel-body">
+	<div class="container"> 
+		<div class="row">
+			<div class="col-md-6">
+				<canvas id="myPieChart" width=200px height=300px></canvas>
+				<script>
+/*Chart.jsに*/
+Chart.plugins.register({
+	afterDatasetsDraw: function(chartInstance, easing) {
+		if (chartInstance.config.type == "doughnut") {
+			var ctx = chartInstance.chart.ctx;
+			chartInstance.data.datasets.forEach(function (dataset, i) {
+				var meta = chartInstance.getDatasetMeta(i);
+				if (!meta.hidden) {
+					meta.data.forEach(function(element, index) {
+						ctx.fillStyle = 'white';
+						var fontSize = 16;
+						var fontStyle = 'normal';
+						var fontFamily = 'Helvetica Neue';
+						ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+						var dataString = chartInstance.data.labels[index];
+						var dataString2 = dataset.data[index];
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+
+						var padding = 5;
+						var position = element.tooltipPosition();
+
+						ctx.fillText(dataString, position.x, position.y - (fontSize / 2) - padding);
+						ctx.fillText(dataString2, position.x, position.y - (fontSize / 2) - padding + fontSize);
+					});
+				}
+			});
+
+			ctx.fillStyle = 'black';
+			var fontSize = 60;
+			var fontStyle = 'normal';
+			var fontFamily = "Helvetica Neue";
+			ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+			ctx.textAlign = 'center';
+			ctx.textBaseline = 'middle';
+			var text = '{{idx}}%';
+			var textX = chartInstance.width/2;
+			var textY = chartInstance.height/2 - (fontSize/2);
+
+			ctx.fillText(text, textX, textY);
+		}
+	}
+});
+
+$(function () {
+	graph();
+	function graph() {
+		$.get("/get3Cfactor", function (data) {
+			var ctx = document.getElementById("myPieChart");
+			var myPieChart = new Chart(ctx, {
+				type: 'doughnut',
+				data: data,
+				options:{
+					legend:{
+						display: true,
+						position: 'bottom'
+					}
+				}
+			});
+		});
+	}
+});
+
+				</script>
+			</div>
+			<div class="col-md-6">
+				<div class="table-responsive">
+					<table class="table table-bordered table-striped">
+						<tr><td class="info">不快指数</td><td>{{f}} %</td></tr>
+						<tr><td class="info">気温</td><td>{{temperature}} c</td></tr>
+						<tr><td class="info">湿度</td><td>{{humidity}} %</td></tr>
+						<tr><td class="info">人数</td><td>{{person}} 人</td></tr>
+						<tr><td class="info">CO2濃度</td><td>{{co2}} ppm</td></tr>
+					</table>
+					<p>三密指数＝</p>
+					<p>CO2濃度の1000ppmを越える10ppm毎に1%</p>
+					<p>＋不快指数の70%を越える1%</p>
+					<p>+人数3人を越える1名毎に10%</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}
