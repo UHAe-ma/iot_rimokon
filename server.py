@@ -45,6 +45,7 @@ class RoomInfo(peewee.Model):
 db.create_tables([RoomInfo])
 
 # JSONを受信,データベースに登録
+# 同時に返り値としてエアコンの制御データを送信
 @app.route('/post_data', methods=['POST'])
 def check():
 
@@ -100,8 +101,12 @@ def check():
         print(e)
         result="NG"
 
-    return result
-
+    return jsonify(
+        model = "Mitsubishi",
+        mode = "Cool",
+        temperature = 26.5,
+        power = 0
+    )
 
 #index.htmlを表示
 @app.route('/')
