@@ -15,12 +15,20 @@ proxies = {
     "https": None,
 }
 
-# SQLiteDBの生成
+
+power = 0
+
+
+# SQLiteDB（デバイスから受信したデータ）の生成
 db=None
+db_rimokon=None
 if os.path.exists('/tmp'):
     db = peewee.SqliteDatabase("/tmp/data.db")
+    db_rimokon = peewee.SqliteDatabase("/tmp/rimokon_data.db")
+
 elif os.path.exists('c:\\temp'):
     db = peewee.SqliteDatabase("c:\\temp\\data.db")
+    db_rimokon = peewee.SqliteDatabase("c:\\temp\\rimokon_data.db")
 
 
 # 室内情報データクラス
@@ -41,9 +49,20 @@ class RoomInfo(peewee.Model):
     class Meta:
         database = db
 
+# エアコン設定データクラス
+class RimokonInfo(peewee.Model):
+    recdate = peewee.TextField()
+    model = peewee.TextField(null=True,default="")
+    power = peewee.IntegerField(null=True,default=0)
+    mode = peewee.TextField(null=True,default="")
+    temperature = peewee.FloatField(null=True,default=0.0)
+
+    class Meta:
+        database = db_rimokon
+
 # テーブルの作成
 db.create_tables([RoomInfo])
-
+db_rimokon.create_tables([RimokonInfo])
 # JSONを受信,データベースに登録
 # 同時に返り値としてエアコンの制御データを送信
 @app.route('/post_data', methods=['POST'])
@@ -101,12 +120,25 @@ def check():
         print(e)
         result="NG"
 
-    return jsonify(
-        model = "Mitsubishi",
-        mode = "Cool",
-        temperature = 26.5,
-        power = 0
-    )
+    # 現在エアコンの設定データを読み込み
+    try:
+        # 最新データ1件目を取得する.
+        rimokonlist = RimokonInfo.select().order_by(RimokonInfo.recdate.desc()).limit(1)
+        v = rimokonlist[0]
+        print(v.recdate, v.model,v.power,v.mode,v.temperature)
+
+    except RimokonInfo.DoesNotExist:
+        abort(404)
+
+    rimokon_data = {
+        "model" : v.model,
+        "mode" : v.mode,
+        "temperature" : v.temperature,
+        "power" : v.power
+    }
+
+    # デバイスにエアコンの設定を送信
+    return rimokon_data
 
 #index.htmlを表示
 @app.route('/')
@@ -160,30 +192,51 @@ def getjson():
     return "nothing"
 
 
-# データを送信
 @app.route('/ac_on')
 def ac_on():
     print("AC_ON")
-    jsonData = {
-        "power":"ON",
-        'time':24
-    }
-    print(jsonData)
-    response = requests.post('http://127.0.0.1:3000/getjson/' , json=json.dumps(jsonData),proxies=proxies)
-    print(response)
+    # 登録日時を日本のTimeZoneで取得して、文字列化して設定
+    dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
+    d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+    # リモコンデータを新規登録
+    v = RimokonInfo(recdate=d)
+    v.model="Mitsubishi"
+    v.power=1
+    v.mode="Cool"
+    v.temperature=26.5
+
+    # データを保存
+    v.save()
+
+    # データを表示
+    for rimokon in RimokonInfo.select():
+        print(rimokon.recdate, rimokon.model,rimokon.power,rimokon.mode,rimokon.temperature)
+
     return "nothing" 
 
-# データを送信
 @app.route('/ac_off')
 def ac_off():
     print("AC_OFF")
-    jsonData = {
-        "power":"OFF",
-        'time':24
-    }
-    print(jsonData)
-    response = requests.post('http://127.0.0.1:3000/getjson/' , json=json.dumps(jsonData),proxies=proxies)
-    print(response)
+    # 登録日時を日本のTimeZoneで取得して、文字列化して設定
+    dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
+    d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+    # リモコンデータを新規登録
+    v = RimokonInfo(recdate=d)
+    v.model="Mitsubishi"
+    v.power=0
+    v.mode="Cool"
+    v.temperature=26.5
+
+    # データを保存
+    v.save()
+
+    # データを表示
+    for rimokon in RimokonInfo.select():
+        print(rimokon.recdate, rimokon.model,rimokon.power,rimokon.mode,rimokon.temperature)
+
+
     return "nothing" 
 
 # サービス起動
