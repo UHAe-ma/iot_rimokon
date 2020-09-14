@@ -4,6 +4,7 @@ import os
 import datetime
 import requests
 import json
+import time 
 
 #初期設定
 app = Flask(__name__)
@@ -69,6 +70,7 @@ db_rimokon.create_tables([RimokonInfo])
 def check():
 
     try:
+        start = time.time()
         # 登録日時を日本のTimeZoneで取得して、文字列化して設定
         dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
         d = dt.strftime('%Y-%m-%d %H:%M')
@@ -107,7 +109,8 @@ def check():
 
         # データを保存
         v.save()
-
+        process_time = time.time() - start
+        print("time:",process_time)
         # データを表示
         for room in RoomInfo.select():
             print(room.recdate, room.temperature)
@@ -195,6 +198,7 @@ def getjson():
 @app.route('/ac_on')
 def ac_on():
     print("AC_ON")
+    start = time.time()
     # 登録日時を日本のTimeZoneで取得して、文字列化して設定
     dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
     d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
@@ -208,7 +212,8 @@ def ac_on():
 
     # データを保存
     v.save()
-
+    process_time =  time.time() - start
+    print("time:",process_time);
     # データを表示
     for rimokon in RimokonInfo.select():
         print(rimokon.recdate, rimokon.model,rimokon.power,rimokon.mode,rimokon.temperature)
@@ -218,6 +223,7 @@ def ac_on():
 @app.route('/ac_off')
 def ac_off():
     print("AC_OFF")
+    start = time.time()
     # 登録日時を日本のTimeZoneで取得して、文字列化して設定
     dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
     d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
@@ -231,7 +237,8 @@ def ac_off():
 
     # データを保存
     v.save()
-
+    process_time =  time.time() - start
+    print("time:",process_time);
     # データを表示
     for rimokon in RimokonInfo.select():
         print(rimokon.recdate, rimokon.model,rimokon.power,rimokon.mode,rimokon.temperature)
