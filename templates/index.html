@@ -11,15 +11,74 @@
 	function kihon() {
     var cnvs = document.getElementById('sample');
     var ctx = cnvs.getContext('2d');
-    ctx.strokeStyle = 'rgb(255,0,255)';
-    ctx.strokeRect( 0, 0, 250,400);
-    ctx.strokeRect( 20, 20, 210,120);
-    ctx.strokeRect( 20, 160, 80,50);
+    ctx.strokeStyle = 'rgb(192, 192, 192)';
+	ctx.fillStyle = 'rgb(192, 192, 192)'; //塗りつぶし
+    ctx.fillRect( 0, 0, 250,400);
+	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
+    ctx.fillRect( 20, 20, 210,120);
+
+	ctx.font = "40px serif";
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("88.8"+"℃", 60, 70);
+	ctx.fillText("88.8"+"%", 60, 130);
+	ctx.fillStyle = 'rgb(255, 255, 0)'; //塗りつぶし
+    ctx.fillRect( 20, 160, 80,50);
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("自動", 20, 200);
+
 	ctx.arc(140, 185, 25,0,Math.PI*2);
+	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
+	ctx.fill() ;
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("切", 120, 200);
+
 	ctx.moveTo(225, 185);
 	ctx.arc(200, 185, 25,0,Math.PI*2);
+	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
+	ctx.fill() ;
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("切", 120, 200);
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("入", 180, 200);
+	ctx.moveTo(225, 185);
+	ctx.arc(200, 185, 25,0,Math.PI*2);
+    ctx.strokeRect( 20, 330, 60,40);
 
+	ctx.beginPath();
+	ctx.moveTo(120,220); //最初の点の場所
+	ctx.lineTo(80,245); //2番目の点の場所
+	ctx.lineTo(160,245); //3番目の点の場所
+	ctx.closePath();	//三角形の最後の線 closeさせる
+	ctx.strokeStyle = "rgb(0,0,0)"; //枠線の色
 	ctx.stroke();
+	
+	ctx.font = "40px serif";
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし	
+	ctx.fillText("28"+"℃", 80, 280);
+
+	ctx.beginPath();
+	ctx.moveTo(120,310); //最初の点の場所
+	ctx.lineTo(80,285); //2番目の点の場所
+	ctx.lineTo(160,285); //3番目の点の場所
+	ctx.closePath();	//三角形の最後の線 closeさせる
+	ctx.strokeStyle = "rgb(0,0,0)"; //枠線の色
+	ctx.stroke();
+
+	ctx.font = "30px serif";
+	ctx.fillStyle = 'rgb(0, 128, 255)'; //塗りつぶし
+    ctx.fillRect( 20, 330, 60,40);
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("冷房", 20, 360);
+	ctx.fillStyle = 'rgb(0, 255, 255)'; //塗りつぶし
+    ctx.fillRect( 100, 330, 60,40);
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("除湿", 100, 360);
+	ctx.fillStyle = 'rgb(255, 0, 0)'; //塗りつぶし
+    ctx.fillRect( 180, 330, 60,40);
+	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
+	ctx.fillText("暖房", 180, 360);
+
+	// ctx.stroke();
 	}
 
 	$(function() {

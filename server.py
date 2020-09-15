@@ -67,6 +67,7 @@ class RimokonInfo(peewee.Model):
 # テーブルの作成
 db.create_tables([RoomInfo])
 db_rimokon.create_tables([RimokonInfo])
+
 # JSONを受信,データベースに登録
 # 同時に返り値としてエアコンの制御データを送信
 @app.route('/post_data', methods=['POST'])
@@ -154,6 +155,48 @@ def check():
     return rimokon_data
 
 
+# エアコンを設定
+@app.route('/set_ac', methods=['POST'])
+def set_ac():
+
+    try:
+        start = time.time()
+        # 登録日時を日本のTimeZoneで取得して、文字列化して設定
+        dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
+        d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+        # POSTされたJSONデータからキーを元にデータ取得
+        mode = request.json['mode']
+        model = request.json['model']
+        power = request.json['power']
+        temp = request.json['temperature']
+        print(temp)
+        print("モード:",mode,"モデル:",model,"電源:",power,"温度:",temp)
+
+        # リモコンデータを新規登録
+        v = RimokonInfo(recdate=d)
+        v.model = model
+        v.power = power
+        v.mode = mode
+        v.temperature = temp
+        v.sendflag = 1
+
+        # データを保存
+        v.save()
+        process_time =  time.time() - start
+        print("time:",process_time);
+        
+        flash('データを受信しました')
+        result = "OK"
+
+    except Exception as e:
+        # エラー時はログ出力して終わり
+        print(e)
+        result="NG"
+
+    return "nothing"
+
+
 # API実装
 # 部屋情報データ取得API→Chart.jsで参照するのに使う
 @app.route('/getRoomInfo/<int:numOfRecord>', methods=['GET'])
@@ -213,7 +256,7 @@ def get_RoomInfo(numOfRecord):
 def getRimokonHistory(numOfRecord):
     # データを日時順に取得する.
     try:
-        rimokon = RimokonInfo.select().order_by(RimokonInfo.recdate)
+        rimokon = RimokonInfo.select().order_by(RimokonInfo.recdate.desc())
     except RimokonInfo.DoesNotExist:
         abort(404)
 
@@ -230,6 +273,8 @@ def getRimokonHistory(numOfRecord):
         ys.append(data)
     # # JSON形式で戻り値を返す
     return make_response(jsonify(ys))
+
+
 
 #index.htmlを表示
 @app.route('/')
