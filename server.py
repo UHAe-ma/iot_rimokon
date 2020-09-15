@@ -281,7 +281,7 @@ def ac_on():
 
     # リモコンデータを新規登録
     v = RimokonInfo(recdate=d)
-    v.model="Mitsubishi"
+    v.model="MitsubishiMSY"
     v.power=1
     v.mode="Cool"
     v.temperature=26.5
@@ -307,7 +307,7 @@ def ac_off():
 
     # リモコンデータを新規登録
     v = RimokonInfo(recdate=d)
-    v.model="Mitsubishi"
+    v.model="MitsubishiMSY"
     v.power=0
     v.mode="Cool"
     v.temperature=26.5
