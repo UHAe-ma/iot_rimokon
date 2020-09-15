@@ -4,35 +4,45 @@
 <script type=text/javascript>
 	onload = function() {
 		kihon();
-		changeColor("THI-color");
-		changeColor("THI-color2");
 		set_THI_Color();
 		// const input = document.querySelector('input');
 		// input.addEventListener('input', updateValue);
 	};
 	
 	function changeColor(idname,color){
-	var obj = document.getElementById(idname);
-	obj.style.color = color;            //文字色を白にする
+		var obj = document.getElementById(idname);
+		obj.style.color = color;            //文字色変更
+	}
+	function changeText(idname,text){
+		var obj = document.getElementById(idname);
+		obj.innerText = text;            //文字変更
 	}
 
 	function set_THI_Color(){
 		var color;
 		if(0 <= {{f}} && {{f}} < 55){
 			color = '#000080';
+			text = "寒い"
 		}else if (55 <= {{f}} && {{f}} < 60){
 			color = '#33CCFF';
+			text = "肌寒い"
 		}else if (60 <= {{f}} && {{f}} < 65){
 			color = '#33FF00';
+			text = "普通"
 		}else if (65 <= {{f}} && {{f}} < 70){
 			color = '#33FF00';
+			text = "快適"
 		}else if (70 <= {{f}} && {{f}} < 75){
 			color = '#33FF00';
+			text = "普通"
 		}else if (75 <= {{f}} && {{f}} < 80){
 			color = '#FF6600';
+			text = "やや暑い"
 		}else if (80 <= {{f}} ){
 			color = '#990000';
+			text = "暑い"
 		}
+		changeText("THI-color",text)
 		changeColor("THI-color",color);
 		changeColor("THI-color2",color);
 	}

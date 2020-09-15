@@ -6,6 +6,7 @@ import requests
 import json
 import time 
 import collections as cl
+import math
 
 #初期設定
 app = Flask(__name__)
@@ -48,6 +49,7 @@ class RoomInfo(peewee.Model):
     pitch = peewee.IntegerField(null=True,default=0.0)
     roll = peewee.IntegerField(null=True,default=0.0)
     yaw = peewee.IntegerField(null=True,default=0.0)
+    gal = peewee.FloatField(null=True,default=0.0)
 
     class Meta:
         database = db
@@ -77,7 +79,7 @@ def check():
         start = time.time()
         # 登録日時を日本のTimeZoneで取得して、文字列化して設定
         dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
-        d = dt.strftime('%Y-%m-%d %H:%M')
+        d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
 
         # POSTされたJSONデータからキーを元にデータ取得
         temp = request.json['temperature']
@@ -92,24 +94,26 @@ def check():
         pitch = request.json['pitch']
         roll = request.json['roll']
         yaw = request.json['yaw']
+
+        #galを計算
+        gal = abs(math.sqrt(pow(accX,2)+pow(accY,2)+pow(accZ,2)) - 1) * 980.665
+        print("gal",gal)
         print("温度:",temp,"湿度:",humid)
 
         # 同日時のデータがあれば更新、無ければ新規登録
-        v = RoomInfo(recdate=d,temperature=temp,humidity=humid)
-        roomlist = RoomInfo.select().where(RoomInfo.recdate == d)
-        if len(roomlist) != 0:
-            v = roomlist[0]
-            v.temperature=temp
-            v.humidity=humid
-            v.accX=accX
-            v.accY=accY
-            v.accZ=accZ
-            v.gyroX=gyroX
-            v.gyroY=gyroY
-            v.gyroZ=gyroZ
-            v.pitch=pitch
-            v.roll=roll
-            v.yaw=yaw
+        v = RoomInfo(recdate=d)
+        v.temperature=temp
+        v.humidity=humid
+        v.accX=accX
+        v.accY=accY
+        v.accZ=accZ
+        v.gyroX=gyroX
+        v.gyroY=gyroY
+        v.gyroZ=gyroZ
+        v.pitch=pitch
+        v.roll=roll
+        v.yaw=yaw
+        v.gal =gal
 
         # データを保存
         v.save()
@@ -117,7 +121,7 @@ def check():
         print("time:",process_time)
         # データを表示
         for room in RoomInfo.select():
-            print(room.recdate, room.temperature)
+            print(room.recdate, room.gal)
         
         flash('データを受信しました')
         result = "OK"
@@ -250,6 +254,38 @@ def get_RoomInfo(numOfRecord):
             "datasets":[dataset1,dataset2,dataset3]}
     return make_response(jsonify(result))
 
+
+# ６軸IMUータ取得API→Chart.jsで参照するのに使う
+@app.route('/getGal/<int:numOfRecord>', methods=['GET'])
+def get_gal(numOfRecord):
+    # データを日時順に取得する.
+    try:
+        roomlist = RoomInfo.select().order_by(RoomInfo.recdate)
+    except RoomInfo.DoesNotExist:
+        abort(404)
+    # グラフ描画用データセットを準備する。
+    # 色や説明はここで変更する。
+    dataset1 = {
+            'label':'Gal',
+            'backgroundColor':'rgba(75,192,192,0.4)',
+            'borderColor':'rgba(75,192,192,1)',
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    labels = []
+    # データを読み込んで、グラフ用に編集しながら追加していく。
+    for v in roomlist:
+        key=v.recdate
+        labels.append(key)
+
+        dataset1['data'].append(v.gal)
+
+    # JSON形式で戻り値を返すために整形
+    result = {
+            "labels":labels,
+            "datasets":[dataset1]}
+    return make_response(jsonify(result))
 
 # リモコン情報データ取得API→Chart.jsで参照するのに使う
 @app.route('/getRimokonHistory/<int:numOfRecord>', methods=['GET'])
