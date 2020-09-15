@@ -4,9 +4,38 @@
 <script type=text/javascript>
 	onload = function() {
 		kihon();
+		changeColor("THI-color");
+		changeColor("THI-color2");
+		set_THI_Color();
 		// const input = document.querySelector('input');
 		// input.addEventListener('input', updateValue);
 	};
+	
+	function changeColor(idname,color){
+	var obj = document.getElementById(idname);
+	obj.style.color = color;            //文字色を白にする
+	}
+
+	function set_THI_Color(){
+		var color;
+		if(0 <= {{f}} && {{f}} < 55){
+			color = '#000080';
+		}else if (55 <= {{f}} && {{f}} < 60){
+			color = '#33CCFF';
+		}else if (60 < {{f}} && {{f}} < 65){
+			color = '#33FF00';
+		}else if (70 < {{f}} && {{f}} < 75){
+			color = '#33FF00';
+		}else if (75 < {{f}} && {{f}} < 80){
+			color = '#33FF00';
+		}else if (80 < {{f}} && {{f}} < 85){
+			color = '#FF6600';
+		}else if (85 < {{f}} ){
+			color = '#990000';
+		}
+		changeColor("THI-color",color);
+		changeColor("THI-color2",color);
+	}
 
 	function kihon() {
     var cnvs = document.getElementById('sample');
@@ -163,12 +192,20 @@
 				<canvas id="sample" width="500" height="500"></canvas>
 			</div>
 			<div class="col-md-6">
-				<div class="table-responsive">
-					<table class="table table-bordered table-striped">
-						<tr><td class="info">不快指数</td><td>{{f}} %</td></tr>
-					</table>
+				<div class="col-md-12">
+					<div class="row">
+						<div class="col-md-6">
+							<h3 class="text-center font40px">不快指数</h3>
+							<h2 id="THI-color" class="text-center font80px">快適</h2>	
+						</div>
+						<div class="col-md-6">
+							<h1 id="THI-color2" class="font120px">{{f}}</h1>	
+						</div>	
+					</div>
 				</div>
-				<canvas id="myChart"></canvas>
+				<div class="col-md-12">
+					<canvas id="myChart"></canvas>
+				</div>
 			</div>
 		</div>
 	</div>
