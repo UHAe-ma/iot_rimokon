@@ -1,4 +1,4 @@
-from flask import Flask,render_template,jsonify,request,flash
+from flask import Flask,render_template,jsonify,request,flash,make_response
 import peewee
 import os
 import datetime
@@ -9,6 +9,7 @@ import time
 #初期設定
 app = Flask(__name__)
 app.secret_key = 'hogehoge'
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 DIFF_JST_FROM_UTC = 9
 
 proxies = {
@@ -57,6 +58,7 @@ class RimokonInfo(peewee.Model):
     power = peewee.IntegerField(null=True,default=0)
     mode = peewee.TextField(null=True,default="")
     temperature = peewee.FloatField(null=True,default=0.0)
+    sendflag = peewee.IntegerField(null=True,default=0)
 
     class Meta:
         database = db_rimokon
@@ -133,15 +135,126 @@ def check():
     except RimokonInfo.DoesNotExist:
         abort(404)
 
+    # エアコンの設定を変更してまだ送信していない場合はsend_flagを1に。
+    send_flag = v.sendflag
+    v.sendflag = 0
+    v.save()
+
     rimokon_data = {
         "model" : v.model,
         "mode" : v.mode,
         "temperature" : v.temperature,
-        "power" : v.power
+        "power" : v.power,
+        "sendIR": send_flag
     }
 
     # デバイスにエアコンの設定を送信
     return rimokon_data
+
+
+# API実装
+# リモコン情報データ取得API→Chart.jsで参照するのに使う
+@app.route('/getRimokonInfo/<int:numOfRecord>', methods=['GET'])
+def get_RimokonInfo(numOfRecord):
+    # データを日時順に取得する.
+    try:
+        rimokonlist = RimokonInfo.select().order_by(RimokonInfo.recdate)
+    except RimokonInfo.DoesNotExist:
+        abort(404)
+    # グラフ描画用データセットを準備する。
+    # 色や説明はここで変更する。
+    dataset1 = {
+            'label':'気温(c)',
+            'backgroundColor':'rgba(75,192,192,0.4)',
+            'borderColor':'rgba(75,192,192,1)',
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    dataset2 = {
+            'label':'湿度(%)',
+            'backgroundColor':'rgba(192,75,192,0.4)',
+            'borderColor':'rgba(192,75,192,1)',        
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    dataset3 = {
+            'label':'不快指数',
+            'backgroundColor':'rgba(75,75,192,0.4)',
+            'borderColor':'rgba(75,75,192,1)',        
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    labels = []
+    # データを読み込んで、グラフ用に編集しながら追加していく。
+    for v in rimokonlist:
+        key=v.recdate
+        labels.append(key)
+
+        dataset1['data'].append(v.temperature)
+        dataset2['data'].append(v.humidity)
+        dataset3['data'].append(f)
+
+    # JSON形式で戻り値を返すために整形
+    result = {
+            "labels":labels,
+            "datasets":[dataset1,dataset2,dataset3]}
+    return make_response(jsonify(result))
+
+
+@app.route('/getRimokonHistory/<int:numOfRecord>', methods=['GET'])
+def get_RoomInfo(numOfRecord):
+    # データを日時順に取得する.
+    try:
+        roomlist = RoomInfo.select().order_by(RoomInfo.recdate)
+    except RoomInfo.DoesNotExist:
+        abort(404)
+    # グラフ描画用データセットを準備する。
+    # 色や説明はここで変更する。
+    dataset1 = {
+            'label':'気温(c)',
+            'backgroundColor':'rgba(75,192,192,0.4)',
+            'borderColor':'rgba(75,192,192,1)',
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    dataset2 = {
+            'label':'湿度(%)',
+            'backgroundColor':'rgba(192,75,192,0.4)',
+            'borderColor':'rgba(192,75,192,1)',        
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    dataset3 = {
+            'label':'不快指数',
+            'backgroundColor':'rgba(75,75,192,0.4)',
+            'borderColor':'rgba(75,75,192,1)',        
+            'yAxisID':'y-axis-1',
+            'fill':'false',
+            'data':[]
+            }
+    labels = []
+    # データを読み込んで、グラフ用に編集しながら追加していく。
+    for v in roomlist:
+        key=v.recdate
+        labels.append(key)
+        # 不快指数の計算
+        f = int(0.81*v.temperature + 0.01 * v.humidity * (0.99 * v.temperature - 14.3) + 46.3)
+
+        dataset1['data'].append(v.temperature)
+        dataset2['data'].append(v.humidity)
+        dataset3['data'].append(f)
+
+    # JSON形式で戻り値を返すために整形
+    result = {
+            "labels":labels,
+            "datasets":[dataset1,dataset2,dataset3]}
+    return make_response(jsonify(result))
+
 
 #index.htmlを表示
 @app.route('/')
@@ -186,6 +299,19 @@ def good():
     name = "Good"
     return name
 
+@app.route('/graph')
+def graph():
+    return render_template('graph.html')
+
+@app.route('/history')
+def history():
+    return render_template('history.html')
+
+@app.route('/setting')
+def setting():
+    return render_template('setting.html')
+
+
 
 # JSONを受信,データベースに登録
 @app.route('/getjson', methods=['POST'])
@@ -209,6 +335,7 @@ def ac_on():
     v.power=1
     v.mode="Cool"
     v.temperature=26.5
+    v.sendflag = 1
 
     # データを保存
     v.save()
@@ -234,6 +361,8 @@ def ac_off():
     v.power=0
     v.mode="Cool"
     v.temperature=26.5
+    v.sendflag = 1
+
 
     # データを保存
     v.save()

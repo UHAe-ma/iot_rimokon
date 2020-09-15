@@ -6,7 +6,7 @@
 $(function () {
 	graph();
 	function graph() {
-		$.get("/getVentilation/100", function (data) {
+		$.get("/getRoomInfo/100", function (data) {
 			// var jdata = JSON.parse(data);
 			var ctx = document.getElementById("myChart");
 			var myChart = new Chart(ctx, {
@@ -22,18 +22,6 @@ $(function () {
 									suggestedMax: 100,
 									suggestedMin: 0,
 									stepSize: 10
-								}
-							},
-							{id:"y-axis-2",
-								typee:"linear",
-								position:"right",
-								ticks: {
-									suggestedMax: 1500,
-									suggestedMin: 500,
-									stepSize: 100
-								},
-								gridLines: {
-									drawOnChartArea: false,
 								}
 							}
 						]
