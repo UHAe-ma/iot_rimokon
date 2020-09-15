@@ -154,57 +154,7 @@ def check():
 
 # API実装
 # リモコン情報データ取得API→Chart.jsで参照するのに使う
-@app.route('/getRimokonInfo/<int:numOfRecord>', methods=['GET'])
-def get_RimokonInfo(numOfRecord):
-    # データを日時順に取得する.
-    try:
-        rimokonlist = RimokonInfo.select().order_by(RimokonInfo.recdate)
-    except RimokonInfo.DoesNotExist:
-        abort(404)
-    # グラフ描画用データセットを準備する。
-    # 色や説明はここで変更する。
-    dataset1 = {
-            'label':'気温(c)',
-            'backgroundColor':'rgba(75,192,192,0.4)',
-            'borderColor':'rgba(75,192,192,1)',
-            'yAxisID':'y-axis-1',
-            'fill':'false',
-            'data':[]
-            }
-    dataset2 = {
-            'label':'湿度(%)',
-            'backgroundColor':'rgba(192,75,192,0.4)',
-            'borderColor':'rgba(192,75,192,1)',        
-            'yAxisID':'y-axis-1',
-            'fill':'false',
-            'data':[]
-            }
-    dataset3 = {
-            'label':'不快指数',
-            'backgroundColor':'rgba(75,75,192,0.4)',
-            'borderColor':'rgba(75,75,192,1)',        
-            'yAxisID':'y-axis-1',
-            'fill':'false',
-            'data':[]
-            }
-    labels = []
-    # データを読み込んで、グラフ用に編集しながら追加していく。
-    for v in rimokonlist:
-        key=v.recdate
-        labels.append(key)
-
-        dataset1['data'].append(v.temperature)
-        dataset2['data'].append(v.humidity)
-        dataset3['data'].append(f)
-
-    # JSON形式で戻り値を返すために整形
-    result = {
-            "labels":labels,
-            "datasets":[dataset1,dataset2,dataset3]}
-    return make_response(jsonify(result))
-
-
-@app.route('/getRimokonHistory/<int:numOfRecord>', methods=['GET'])
+@app.route('/getRoomInfo/<int:numOfRecord>', methods=['GET'])
 def get_RoomInfo(numOfRecord):
     # データを日時順に取得する.
     try:
