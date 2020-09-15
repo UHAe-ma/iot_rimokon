@@ -2,11 +2,14 @@
 {% block content %}
 
 <script type=text/javascript>
+	var img01 = new Image();
+	img01.src = "./static/images/Toshiba_logo.svg";
+
+
 	onload = function() {
 		kihon();
-		set_THI_Color();
-		// const input = document.querySelector('input');
-		// input.addEventListener('input', updateValue);
+		set_THI_Color({{f}});
+
 	};
 	
 	function changeColor(idname,color){
@@ -18,27 +21,27 @@
 		obj.innerText = text;            //文字変更
 	}
 
-	function set_THI_Color(){
+	function set_THI_Color(f){
 		var color;
-		if(0 <= {{f}} && {{f}} < 55){
+		if(0 <= f && f < 55){
 			color = '#000080';
 			text = "寒い"
-		}else if (55 <= {{f}} && {{f}} < 60){
+		}else if (55 <= f && f < 60){
 			color = '#33CCFF';
 			text = "肌寒い"
-		}else if (60 <= {{f}} && {{f}} < 65){
+		}else if (60 <= f && f < 65){
 			color = '#33FF00';
 			text = "普通"
-		}else if (65 <= {{f}} && {{f}} < 70){
+		}else if (65 <= f && f < 70){
 			color = '#33FF00';
 			text = "快適"
-		}else if (70 <= {{f}} && {{f}} < 75){
+		}else if (70 <= f && f < 75){
 			color = '#33FF00';
 			text = "普通"
-		}else if (75 <= {{f}} && {{f}} < 80){
+		}else if (75 <= f && f < 80){
 			color = '#FF6600';
 			text = "やや暑い"
-		}else if (80 <= {{f}} ){
+		}else if (80 <= f ){
 			color = '#990000';
 			text = "暑い"
 		}
@@ -52,70 +55,73 @@
     var ctx = cnvs.getContext('2d');
     ctx.strokeStyle = 'rgb(192, 192, 192)';
 	ctx.fillStyle = 'rgb(192, 192, 192)'; //塗りつぶし
-    ctx.fillRect( 0, 0, 250,400);
+    ctx.fillRect( 0, 0, 250,600);
 	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
-    ctx.fillRect( 20, 20, 210,120);
+    ctx.fillRect( 20, 40, 210,140);
 
-	ctx.font = "40px serif";
+	ctx.font = "40px sans-serif";
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText({{temperature}}+"℃", 60, 70);
-	ctx.fillText({{humidity}}+"%", 60, 130);
+	ctx.fillText({{temperature}}+"℃", 60, 90);
+	ctx.fillText({{humidity}}+"%", 60, 150);
 	ctx.fillStyle = 'rgb(255, 255, 0)'; //塗りつぶし
-    ctx.fillRect( 20, 160, 80,50);
+    ctx.fillRect( 20, 190, 80,50);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("自動", 20, 200);
+	ctx.fillText("自動", 20, 230);
 
-	ctx.arc(140, 185, 25,0,Math.PI*2);
+	ctx.arc(140, 215, 25,0,Math.PI*2);
 	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
 	ctx.fill() ;
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("切", 120, 200);
 
 	ctx.moveTo(225, 185);
-	ctx.arc(200, 185, 25,0,Math.PI*2);
+	ctx.arc(200, 215, 25,0,Math.PI*2);
 	ctx.fillStyle = 'rgb(128, 128, 128)'; //塗りつぶし
 	ctx.fill() ;
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("切", 120, 200);
+	ctx.fillText("切", 120, 230);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("入", 180, 200);
+	ctx.fillText("入", 180, 230);
 	ctx.moveTo(225, 185);
-	ctx.arc(200, 185, 25,0,Math.PI*2);
     ctx.strokeRect( 20, 330, 60,40);
 
 	ctx.beginPath();
-	ctx.moveTo(120,220); //最初の点の場所
-	ctx.lineTo(80,245); //2番目の点の場所
-	ctx.lineTo(160,245); //3番目の点の場所
+	ctx.moveTo(120,240); //最初の点の場所
+	ctx.lineTo(80,265); //2番目の点の場所
+	ctx.lineTo(160,265); //3番目の点の場所
 	ctx.closePath();	//三角形の最後の線 closeさせる
 	ctx.strokeStyle = "rgb(0,0,0)"; //枠線の色
 	ctx.stroke();
 	
-	ctx.font = "40px serif";
+	ctx.font = "40px sans-serif";
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし	
-	ctx.fillText({{set_temp}}+"℃", 80, 280);
+	ctx.fillText({{set_temp}}+"℃", 80, 300);
 
 	ctx.beginPath();
-	ctx.moveTo(120,310); //最初の点の場所
-	ctx.lineTo(80,285); //2番目の点の場所
-	ctx.lineTo(160,285); //3番目の点の場所
+	ctx.moveTo(120,330); //最初の点の場所
+	ctx.lineTo(80,305); //2番目の点の場所
+	ctx.lineTo(160,305); //3番目の点の場所
 	ctx.closePath();	//三角形の最後の線 closeさせる
 	ctx.strokeStyle = "rgb(0,0,0)"; //枠線の色
 	ctx.stroke();
 
-	ctx.font = "30px serif";
+	ctx.font = "30px sans-serif";
 	ctx.fillStyle = 'rgb(0, 128, 255)'; //塗りつぶし
-    ctx.fillRect( 20, 330, 60,40);
+    ctx.fillRect( 20, 350, 60,40);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("冷房", 20, 360);
+	ctx.fillText("冷房", 20, 380);
 	ctx.fillStyle = 'rgb(0, 255, 255)'; //塗りつぶし
-    ctx.fillRect( 100, 330, 60,40);
+    ctx.fillRect( 100, 350, 60,40);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("除湿", 100, 360);
+	ctx.fillText("除湿", 100, 380);
 	ctx.fillStyle = 'rgb(255, 0, 0)'; //塗りつぶし
-    ctx.fillRect( 180, 330, 60,40);
+    ctx.fillRect( 180, 350, 60,40);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("暖房", 180, 360);
+	ctx.fillText("暖房", 180, 380);
+	
+	ctx.scale(0.15, 0.15);
+	ctx.drawImage(img01, 400, 3000)
+
+	ctx.scale(1, 1);
 
 	// ctx.stroke();
 	}
@@ -145,38 +151,54 @@
 	// 	power.innerText = e.target.value;
 	// }
 
-	$(function () {
-	graph();
-	function graph() {
-		$.get("/getRoomInfo/100", function (data) {
-			// var jdata = JSON.parse(data);
-			var ctx = document.getElementById("myChart");
-			var myChart = new Chart(ctx, {
-				type: 'line',
-				data: data,
-				options: {
-					scales: {
-						yAxes: [
-							{id:"y-axis-1",
-								typee:"linear",
-								position:"left",
-								ticks: {
-									suggestedMax: 100,
-									suggestedMin: 0,
-									stepSize: 10
-								}
-							}
-						]
-					},
-				}
-			});
-		});
-	}
-});
+// 	$(function () {
+// 	graph();
+// 	function graph() {
+// 		$.get("/getRoomInfo/100", function (data) {
+// 			// var jdata = JSON.parse(data);
+// 			var ctx = document.getElementById("myChart");
+// 			var myChart = new Chart(ctx, {
+// 				type: 'line',
+// 				data: data,
+// 				options: {
+// 					scales: {
+// 						yAxes: [
+// 							{id:"y-axis-1",
+// 								typee:"linear",
+// 								position:"left",
+// 								ticks: {
+// 									suggestedMax: 100,
+// 									suggestedMin: 0,
+// 									stepSize: 10
+// 								}
+// 							}
+// 						]
+// 					},
+// 				}
+// 			});
+// 		});
+// 	}
+// });
 
-	setTimeout(function () {
-		location.reload();
-	}, 30000);
+
+
+
+
+	setInterval(function () {
+		$.ajax({
+			url: "/getLatestRoomInfo",
+			method: "GET",
+		})
+		.done(function(data){
+			console.log(data);
+			$('#len').html(data);
+		});
+		console.log(data.f);
+		set_THI_Color(data.f);
+		var obj2 = document.getElementById('THI-color2');
+		obj2.innerText = data.f;            //文字変更
+		console.log("timeout1000")
+	}, 1000);
 
 </script>
 
@@ -184,8 +206,12 @@
 	<h1>IoTリモコン</h1>
 </div>
 <div class="panel panel-body">
-
 	<div class="container"> 
+		{% for message in get_flashed_messages() %}
+		<div class="alert alert-success">{{ message }}</div>
+		{% endfor %}
+		{% block body %}{% endblock %}
+
 		<div class="row">
 			<div class="col-md-6">
 				<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
@@ -214,7 +240,61 @@
 					</div>
 				</div>
 				<div class="col-md-12">
-					<canvas id="myChart"></canvas>
+					<canvas id="myChart3"></canvas>
+					<script>
+						var ctx3 = document.getElementById('myChart3').getContext('2d');
+						var chart3 = new Chart(ctx3, {
+						type: 'line',
+						data: {
+							datasets: [{
+							data: []
+							}, {
+							data: []
+							}]
+						},
+						options: {
+							scales: {
+							xAxes: [{
+								type: 'realtime'     <!-- Barメソッドを実行すれば棒グラフ -->
+							}]
+							},
+							plugins: {
+									streaming: {            
+										duration: 20000,    
+										refresh: 1000,      
+										delay: 1000,        
+										frameRate: 30,      
+										pause: false,       
+
+
+										onRefresh: function(chart) {
+											data = get_data()
+											console.log(data)
+											console.log(Date.now())
+											chart.data.datasets[0].data.push({
+												x: Date.now(),
+												y: data.temperature
+											});
+										}
+									}
+								}
+							}
+						});
+
+						let a = 0;
+						function get_data(){
+							$.ajax({
+								url: "/getLatestRoomInfo",
+								method: "GET",
+							})
+							.done(function(data){
+								a = data;
+								console.log(data);
+								$('#len').html(data);
+							});
+							return a;
+						}						
+					</script>
 				</div>
 			</div>
 		</div>

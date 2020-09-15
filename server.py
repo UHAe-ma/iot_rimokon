@@ -1,4 +1,4 @@
-from flask import Flask,render_template,jsonify,request,flash,make_response
+from flask import Flask,render_template,jsonify,request,flash,make_response,url_for,redirect
 import peewee
 import os
 import datetime
@@ -254,6 +254,26 @@ def get_RoomInfo(numOfRecord):
             "datasets":[dataset1,dataset2,dataset3]}
     return make_response(jsonify(result))
 
+# 部屋情報データ取得API→Chart.jsで参照するのに使う
+@app.route('/getLatestRoomInfo/', methods=['GET'])
+def get_LatestRoomInfo():
+    # データを日時順に取得する.
+    try:
+        roomlist = RoomInfo.select().order_by(RoomInfo.recdate.desc())
+    except RoomInfo.DoesNotExist:
+        abort(404)
+    # データを読み込んで、グラフ用に編集しながら追加していく。
+    v = roomlist[0]
+    recdate=v.recdate
+    # 不快指数の計算
+    f = int(0.81*v.temperature + 0.01 * v.humidity * (0.99 * v.temperature - 14.3) + 46.3)
+    temp = v.temperature
+    humidity = v.humidity
+
+    # JSON形式で戻り値を返すために整形
+    result = {"recdate":recdate,"temperature":temp,"humidity":humidity,"f":f}
+    return make_response(jsonify(result))
+
 
 # ６軸IMUータ取得API→Chart.jsで参照するのに使う
 @app.route('/getGal/<int:numOfRecord>', methods=['GET'])
@@ -424,7 +444,8 @@ def ac_on():
     for rimokon in RimokonInfo.select():
         print(rimokon.recdate, rimokon.model,rimokon.power,rimokon.mode,rimokon.temperature)
 
-    return "nothing" 
+    flash('エアコン設定を登録しました')    # ←ここを追記
+    return redirect(url_for('index'))
 
 @app.route('/ac_off')
 def ac_off():
