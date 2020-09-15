@@ -19,8 +19,8 @@
 
 	ctx.font = "40px serif";
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
-	ctx.fillText("88.8"+"℃", 60, 70);
-	ctx.fillText("88.8"+"%", 60, 130);
+	ctx.fillText({{temperature}}+"℃", 60, 70);
+	ctx.fillText({{humidity}}+"%", 60, 130);
 	ctx.fillStyle = 'rgb(255, 255, 0)'; //塗りつぶし
     ctx.fillRect( 20, 160, 80,50);
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし
@@ -54,7 +54,7 @@
 	
 	ctx.font = "40px serif";
 	ctx.fillStyle = 'rgb(0, 0, 0)'; //塗りつぶし	
-	ctx.fillText("28"+"℃", 80, 280);
+	ctx.fillText({{set_temp}}+"℃", 80, 280);
 
 	ctx.beginPath();
 	ctx.moveTo(120,310); //最初の点の場所

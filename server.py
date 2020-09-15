@@ -322,7 +322,7 @@ def index():
     else:
         # データがなかったらデフォルト設定
         ac_mode = "Cool"
-        ac_model = "MitsubishiMSY"
+        ac_model = "Toshiba"
         ac_power = 0
         ac_set_temperature = 26.0
 
@@ -374,7 +374,7 @@ def ac_on():
 
     # リモコンデータを新規登録
     v = RimokonInfo(recdate=d)
-    v.model="MitsubishiMSY"
+    v.model="Toshiba"
     v.power=1
     v.mode="Cool"
     v.temperature=26.5
@@ -400,7 +400,7 @@ def ac_off():
 
     # リモコンデータを新規登録
     v = RimokonInfo(recdate=d)
-    v.model="MitsubishiMSY"
+    v.model="Toshiba"
     v.power=0
     v.mode="Cool"
     v.temperature=26.5
