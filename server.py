@@ -235,13 +235,36 @@ def index():
     else:
         print("データなし")
 
+
+    try:
+        # リモコン情報でを取得する.
+        rimokonlist = RimokonInfo.select().order_by(RimokonInfo.recdate.desc())
+    except RimokonInfo.DoesNotExist:
+        abort(404)
+
+    # データがあれば、計算する.
+    if len(rimokonlist) > 0:
+        v = rimokonlist[0]
+        ac_mode = v.mode
+        ac_model = v.model
+        ac_power = v.power
+        ac_set_temperature = v.temperature
+    else:
+        # データがなかったらデフォルト設定
+        ac_mode = "Cool"
+        ac_model = "MitsubishiMSY"
+        ac_power = 0
+        ac_set_temperature = 26.0
+
     return render_template('index.html',
             idx=int(idx),
             f=f,
             temperature=t,
             humidity=h,
-            person=p,
-            co2=c)
+            mode=ac_mode,
+            model=ac_model,
+            power=ac_power,
+            set_temp=ac_set_temperature)
 
 #試し。goodを表示
 @app.route('/good')

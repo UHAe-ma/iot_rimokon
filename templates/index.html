@@ -4,6 +4,8 @@
 <script type=text/javascript>
 	onload = function() {
 		kihon();
+		// const input = document.querySelector('input');
+		// input.addEventListener('input', updateValue);
 	};
 
 	function kihon() {
@@ -24,8 +26,9 @@
 	  $('a#ac_on').bind('click', function() {
 		$.getJSON('/ac_on',
 			function(data) {
-		  //do nothing
 		});
+		var power = document.getElementById('ac_power')
+		power.innerText = 1
 		return false;
 	  });
 	  $('a#ac_off').bind('click', function() {
@@ -33,9 +36,16 @@
 			function(data) {
 		  //do nothing
 		});
+		var power = document.getElementById('ac_power')
+		power.innerText = 0
 		return false;
 	  });
 	});
+
+	// function updateValue(e) {
+	// 	var set_temp = document.getElementById('set_temperature')
+	// 	power.innerText = e.target.value;
+	// }
 
 	$(function () {
 	graph();
@@ -65,19 +75,32 @@
 		});
 	}
 });
+
+	setTimeout(function () {
+		location.reload();
+	}, 30000);
+
 </script>
 
 <div class="panel panel-head">
 	<h1>IoTリモコン</h1>
 </div>
 <div class="panel panel-body">
-	
-	<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
-	<a href=# id=ac_off><button class='btn btn-default' value="1">エアコンＯＦＦ</button></a>
 
 	<div class="container"> 
 		<div class="row">
 			<div class="col-md-6">
+				<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
+				<a href=# id=ac_off><button class='btn btn-default' value="1">エアコンＯＦＦ</button></a>
+				<!-- <label>設定温度:
+					<input type="number" name="number" min="15" max="32" step="0.1">
+				</label> -->
+				<table class="table table-bordered table-striped">
+					<tr><td class="info">モード</td><td>{{mode}}</td></tr>
+					<tr><td class="info">機種</td><td>{{model}}</td></tr>
+					<tr><td class="info">電源</td><td id="ac_power"> {{power}}</td></tr>
+					<tr><td class="info">設定温度</td><td id = set_temperature>{{set_temp}}</td></tr>
+				</table>				
 				<canvas id="sample" width="500" height="500"></canvas>
 			</div>
 			<div class="col-md-6">
