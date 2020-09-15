@@ -5,6 +5,7 @@ import datetime
 import requests
 import json
 import time 
+import collections as cl
 
 #初期設定
 app = Flask(__name__)
@@ -137,6 +138,7 @@ def check():
 
     # エアコンの設定を変更してまだ送信していない場合はsend_flagを1に。
     send_flag = v.sendflag
+    # これから送信するため、データベースのsendflagを0に
     v.sendflag = 0
     v.save()
 
@@ -153,7 +155,7 @@ def check():
 
 
 # API実装
-# リモコン情報データ取得API→Chart.jsで参照するのに使う
+# 部屋情報データ取得API→Chart.jsで参照するのに使う
 @app.route('/getRoomInfo/<int:numOfRecord>', methods=['GET'])
 def get_RoomInfo(numOfRecord):
     # データを日時順に取得する.
@@ -205,6 +207,29 @@ def get_RoomInfo(numOfRecord):
             "datasets":[dataset1,dataset2,dataset3]}
     return make_response(jsonify(result))
 
+
+# リモコン情報データ取得API→Chart.jsで参照するのに使う
+@app.route('/getRimokonHistory/<int:numOfRecord>', methods=['GET'])
+def getRimokonHistory(numOfRecord):
+    # データを日時順に取得する.
+    try:
+        rimokon = RimokonInfo.select().order_by(RimokonInfo.recdate)
+    except RimokonInfo.DoesNotExist:
+        abort(404)
+
+    # データを読み込んで、グラフ用に編集しながら追加していく。
+    ys = []
+    for v in rimokon:
+        data = cl.OrderedDict()
+        data['recdata'] = v.recdate,
+        data['model'] = v.model
+        data['mode'] = v.mode
+        data['power'] = v.power
+        data['set_temperature'] = v.temperature
+        # print(data)
+        ys.append(data)
+    # # JSON形式で戻り値を返す
+    return make_response(jsonify(ys))
 
 #index.htmlを表示
 @app.route('/')

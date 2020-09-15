@@ -1,14 +1,15 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>操作履歴</h1>
-<table data-toggle="table" data-url="http://kuneo.org/sandbox/bootstrap-table/json/getstart.json">
+<table data-toggle="table" data-url="./getRimokonHistory/100">
     <thead>
       <tr>
-        <th data-field="id">日時</th>
+        <th data-field="recdata">日時</th>
         <th data-field="power">電源</th>
         <th data-field="mode">モード</th>
-        <th data-field="temperature">設定温度</th>
+        <th data-field="model">モード</th>
+        <th data-field="set_temperature">設定温度</th>
       </tr>
     </thead>
   </table>
-{% endblock %}
+  {% endblock %}
