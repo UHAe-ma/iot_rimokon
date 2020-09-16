@@ -52,7 +52,8 @@
 
 	function kihon() {
     var cnvs = document.getElementById('sample');
-    var ctx = cnvs.getContext('2d');
+	var ctx = cnvs.getContext('2d');
+	ctx.clearRect(0, 0, 250, 600);
     ctx.strokeStyle = 'rgb(192, 192, 192)';
 	ctx.fillStyle = 'rgb(192, 192, 192)'; //塗りつぶし
     ctx.fillRect( 0, 0, 250,600);
@@ -218,6 +219,8 @@
 				power.innerText = 0
 			}
 		}
+
+		//リモコンのアニメーション
 		console.log("gal",data.gal)
 		console.log("IntervalFunction")
 	}, 1000);

@@ -175,8 +175,9 @@ def set_ac():
         model = request.json['model']
         power = request.json['power']
         temp = request.json['temperature']
+        gal_autostop = request.json['gal_autostop']
         print(temp)
-        print("モード:",mode,"モデル:",model,"電源:",power,"温度:",temp)
+        print("モード:",mode,"モデル:",model,"電源:",power,"温度:",temp,"自動停止:",gal_autostop)
 
         # リモコンデータを新規登録
         v = RimokonInfo(recdate=d)
@@ -185,7 +186,7 @@ def set_ac():
         v.mode = mode
         v.temperature = temp
         v.sendflag = 1
-        v.gal_autostop = 1
+        v.gal_autostop = gal_autostop
 
         # データを保存
         v.save()
