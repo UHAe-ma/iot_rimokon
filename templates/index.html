@@ -11,7 +11,7 @@
 		set_THI_Color({{f}});
 		localStorage.setItem('room_temperature', "{{temperature}}");
 		localStorage.setItem('room_humidity', "{{humidity}}");
-		console.log("ローカルストレージ"{{temperature}});
+		console.log("ローカルストレージ",{{temperature}});
 
 		localStorage.setItem('ac_mode', "{{mode}}");
 		localStorage.setItem('ac_model', "{{model}}");
@@ -211,7 +211,6 @@
 			set_THI_Color(data.f);
 			var obj2 = document.getElementById('THI-color2');
 			obj2.innerText = data.f;            //文字変更
-			print("おんど:"data.temperature)
 		}else {
 			console.log("undefined")
 			var obj2 = document.getElementById('THI-color2');
