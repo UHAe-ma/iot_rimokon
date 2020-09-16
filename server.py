@@ -306,11 +306,6 @@ def getLatestRimokonInfo():
     except RimokonInfo.DoesNotExist:
         abort(404)
 
-    # エアコンの設定を変更してまだ送信していない場合はsend_flagを1に。
-    send_flag = v.sendflag
-    # これから送信するため、データベースのsendflagを0に
-    v.sendflag = 0
-    v.save()
 
     rimokon_data = {
         "model" : v.model,
