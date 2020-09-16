@@ -7,3 +7,8 @@
 .font120px{
     font-size: 80px;
 }
+
+/*モーダル全体の背景設定*/
+.modal-content {
+    background: yellow;
+}

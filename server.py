@@ -269,9 +269,14 @@ def get_LatestRoomInfo():
     f = int(0.81*v.temperature + 0.01 * v.humidity * (0.99 * v.temperature - 14.3) + 46.3)
     temp = v.temperature
     humidity = v.humidity
+    accX = v.accX
+    accY = v.accY
+    accZ = v.accZ
+    gal = v.gal
 
     # JSON形式で戻り値を返すために整形
-    result = {"recdate":recdate,"temperature":temp,"humidity":humidity,"f":f}
+    result = {"recdate":recdate,"temperature":temp,"humidity":humidity,"f":f,
+              "accX":accX,"accY":accY,"accZ":accZ,"gal":gal}
     return make_response(jsonify(result))
 
 

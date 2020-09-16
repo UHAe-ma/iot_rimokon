@@ -193,12 +193,34 @@
 			console.log(data);
 			$('#len').html(data);
 		});
-		console.log(data.f);
-		set_THI_Color(data.f);
-		var obj2 = document.getElementById('THI-color2');
-		obj2.innerText = data.f;            //文字変更
-		console.log("timeout1000")
-	}, 2000);
+		// 不快指数表示の更新
+		if (typeof data.f != "undefined"){
+			console.log("not undefined")
+			console.log(data.f);
+			set_THI_Color(data.f);
+			var obj2 = document.getElementById('THI-color2');
+			obj2.innerText = data.f;            //文字変更
+		}else {
+			console.log("undefined")
+			var obj2 = document.getElementById('THI-color2');
+			obj2.innerText = {{f}};
+		}
+		//
+		if( data.gal != "undefined"){
+			if (data.gal > 10000 && {{power}} == 1) {
+				console.log("地震!");
+				$('#testModal').modal();
+				$.getJSON('/ac_off',
+				function(data) {
+		  		//do nothing
+			});
+				var power = document.getElementById('ac_power')
+				power.innerText = 0
+			}
+		}
+		console.log("gal",data.gal)
+		console.log("IntervalFunction")
+	}, 1000);
 
 </script>
 
@@ -216,6 +238,7 @@
 			<div class="col-md-6">
 				<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
 				<a href=# id=ac_off><button class='btn btn-default' value="1">エアコンＯＦＦ</button></a>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#testModal">ボタンで開く</button>
 				<!-- <label>設定温度:
 					<input type="number" name="number" min="15" max="32" step="0.1">
 				</label> -->
@@ -261,8 +284,8 @@
 							plugins: {
 									streaming: {            
 										duration: 20000,    
-										refresh: 1000,      
-										delay: 1000,        
+										refresh: 2000,      
+										delay: 2000,        
 										frameRate: 30,      
 										pause: false,       
 
@@ -272,8 +295,8 @@
 											console.log(data)
 											console.log(Date.now())
 											chart.data.datasets[0].data.push({
-												x: Date.now(),
-												y: data.temperature
+											x: Date.now(),
+											y: data.temperature
 											});
 										}
 									}
@@ -299,5 +322,23 @@
 			</div>
 		</div>
 	</div>
+
+    <!-- ボタン・リンククリック後に表示される画面の内容 -->
+    <div class="modal fade" id="testModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4>異常な揺れを観測</h4>
+                </div>
+                <div class="modal-body">
+                    <label>エアコンを停止します</label>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
 {% endblock %}
