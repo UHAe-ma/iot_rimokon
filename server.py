@@ -62,7 +62,7 @@ class RimokonInfo(peewee.Model):
     mode = peewee.TextField(null=True,default="")
     temperature = peewee.FloatField(null=True,default=0.0)
     sendflag = peewee.IntegerField(null=True,default=0)
-
+    gal_autostop = peewee.IntegerField(null=True,default=1)
     class Meta:
         database = db_rimokon
 
@@ -152,7 +152,8 @@ def check():
         "mode" : v.mode,
         "temperature" : v.temperature,
         "power" : v.power,
-        "sendIR": send_flag
+        "sendIR": send_flag,
+        "gal_autostop": v.gal_autostop
     }
 
     # デバイスにエアコンの設定を送信
@@ -184,6 +185,7 @@ def set_ac():
         v.mode = mode
         v.temperature = temp
         v.sendflag = 1
+        v.gal_autostop = 1
 
         # データを保存
         v.save()
@@ -330,6 +332,7 @@ def getRimokonHistory(numOfRecord):
         data['mode'] = v.mode
         data['power'] = v.power
         data['set_temperature'] = v.temperature
+        data['gal_autostop'] = v.gal_autostop
         # print(data)
         ys.append(data)
     # # JSON形式で戻り値を返す
@@ -440,6 +443,7 @@ def ac_on():
     v.mode="Cool"
     v.temperature=26.5
     v.sendflag = 1
+    v.gal_autostop = 1
 
     # データを保存
     v.save()
@@ -467,6 +471,7 @@ def ac_off():
     v.mode="Cool"
     v.temperature=26.5
     v.sendflag = 1
+    v.gal_autostop = 1
 
 
     # データを保存
