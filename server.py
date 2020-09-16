@@ -419,12 +419,32 @@ def index():
         ac_model = v.model
         ac_power = v.power
         ac_set_temperature = v.temperature
+        ac_gal_autostop = v.gal_autostop
     else:
         # データがなかったらデフォルト設定
         ac_mode = "Cool"
         ac_model = "Toshiba"
         ac_power = 0
         ac_set_temperature = 26.0
+        ac_gal_autostop = 1
+        
+        #リモコン情報がまったくなければ初期化
+        # 登録日時を日本のTimeZoneで取得して、文字列化して設定
+        dt = datetime.datetime.utcnow() + datetime.timedelta(hours=9)
+        d = dt.strftime('%Y-%m-%d %H:%M:%S.%f')
+
+        # リモコンデータを新規登録
+        v = RimokonInfo(recdate=d)
+        v.model="Toshiba"
+        v.power=0
+        v.mode="Cool"
+        v.temperature=26.5
+        v.sendflag = 0
+        v.gal_autostop = 1
+
+        # データを保存
+        v.save()
+        print("Init RimokonData!")
 
     return render_template('index.html',
             idx=int(idx),
@@ -434,7 +454,8 @@ def index():
             mode=ac_mode,
             model=ac_model,
             power=ac_power,
-            set_temp=ac_set_temperature)
+            set_temp=ac_set_temperature,
+            gal_autostop = ac_gal_autostop)
 
 #試し。goodを表示
 @app.route('/good')

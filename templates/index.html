@@ -7,7 +7,7 @@
 
 
 	onload = function() {
-		kihon();
+		// kihon();
 		set_THI_Color({{f}});
 		localStorage.setItem('room_temperature', "{{temperature}}");
 		localStorage.setItem('room_humidity', "{{humidity}}");
@@ -216,19 +216,37 @@
 			var obj2 = document.getElementById('THI-color2');
 			obj2.innerText = {{f}};
 		}
-		//
+		//地震だ！
+		var earth_quake = 0
 		if( data.gal != "undefined"){
-			if (data.gal > 10000 && {{power}} == 1) {
+			if (data.gal > 10000 ) {
 				console.log("地震!");
-				$('#testModal').modal();
-				$.getJSON('/ac_off',
-				function(data) {
-		  		//do nothing
-			});
-				var power = document.getElementById('ac_power')
-				power.innerText = 0
+				earth_quake = 1
 			}
 		}
+
+		//大きな揺れで、リモコンの設定が電源ONの時のみ、エアコンOFF信号を送信
+		if ( earth_quake == 1 && localStorage.getItem("ac_power") == "1"){
+			$('#testModal').modal();
+			var send_ac_setting = {"mode":localStorage.getItem("ac_mode"),
+								"model":localStorage.getItem("ac_model"),
+								"power":0,
+								"temperature":localStorage.getItem("ac_temperature"),
+								"gal_autostop":localStorage.getItem("ac_gal_autostop"),
+							}
+        localStorage.setItem('ac_power', 0)
+			/* 設定送信 */
+			$.ajax({
+				url: "/set_ac",
+				type:          'post',
+				dataType:      'json',
+				contentType:   'application/json',
+				scriptCharset: 'utf-8',
+				data:          JSON.stringify(send_ac_setting)
+			})		
+		}
+
+
 
 		console.log("TEST!");
 		$.ajax({
@@ -253,25 +271,25 @@
 </div>
 <div class="panel panel-body">
 	<div class="container"> 
-		{% for message in get_flashed_messages() %}
+		<!-- {% for message in get_flashed_messages() %}
 		<div class="alert alert-success">{{ message }}</div>
 		{% endfor %}
-		{% block body %}{% endblock %}
+		{% block body %}{% endblock %} -->
 
 		<div class="row">
 			<div class="col-md-6">
-				<a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
+				<!-- <a href=# id=ac_on><button class='btn btn-default' value="1">エアコンＯＮ</button></a>
 				<a href=# id=ac_off><button class='btn btn-default' value="1">エアコンＯＦＦ</button></a>
-				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#testModal">ボタンで開く</button>
+				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#testModal">ボタンで開く</button> -->
 				<!-- <label>設定温度:
 					<input type="number" name="number" min="15" max="32" step="0.1">
 				</label> -->
-				<table class="table table-bordered table-striped">
+				<!-- <table class="table table-bordered table-striped">
 					<tr><td class="info">モード</td><td>{{mode}}</td></tr>
 					<tr><td class="info">機種</td><td>{{model}}</td></tr>
 					<tr><td class="info">電源</td><td id="ac_power"> {{power}}</td></tr>
 					<tr><td class="info">設定温度</td><td id = set_temperature>{{set_temp}}</td></tr>
-				</table>				
+				</table>				 -->
 				<!-- <canvas id="sample" width="500" height="500"></canvas> -->
 				<main id="app">
 					<!-- ここにPixiの描画領域(Canvas)が入る -->
@@ -281,16 +299,34 @@
 			<div class="col-md-6">
 				<div class="col-md-12">
 					<div class="row">
-						<div class="col-md-6">
+						<div class="col-md-8">
 							<h3 class="text-center font40px">不快指数</h3>
 							<h2 id="THI-color" class="text-center font80px">快適</h2>	
 						</div>
-						<div class="col-md-6">
+						<div class="col-md-4">
 							<h1 id="THI-color2" class="font120px">{{f}}</h1>	
 						</div>	
 					</div>
 				</div>
-				<div class="col-md-12">
+
+					<ul class="nav nav-tabs">
+						<li class="nav-item">
+						  <a href="#roominfo" class="nav-link active" data-toggle="tab">温度・湿度</a>
+						</li>
+						<li class="nav-item">
+						  <a href="#yure" class="nav-link" data-toggle="tab">揺れ</a>
+						</li>
+					</ul>
+					
+					<div class="tab-content">
+						<div id="roominfo" class="tab-pane active">
+							<canvas id="myChart3"></canvas>
+						</div>
+						<div id="yure" class="tab-pane">
+							<canvas id="myChart4"></canvas>
+						</div>
+					</div>
+
 					<canvas id="myChart3"></canvas>
 					<script>
 						var ctx3 = document.getElementById('myChart3').getContext('2d');
@@ -344,7 +380,46 @@
 								$('#len').html(data);
 							});
 							return a;
-						}						
+						}					
+
+
+						var ctx4 = document.getElementById('myChart4').getContext('2d');
+						var chart4 = new Chart(ctx4, {
+						type: 'line',
+						data: {
+							datasets: [{
+							data: []
+							}, {
+							data: []
+							}]
+						},
+						options: {
+							scales: {
+							xAxes: [{
+								type: 'realtime'     <!-- Barメソッドを実行すれば棒グラフ -->
+							}]
+							},
+							plugins: {
+									streaming: {            
+										duration: 20000,    
+										refresh: 2000,      
+										delay: 2000,        
+										frameRate: 30,      
+										pause: false,       
+
+
+										onRefresh: function(chart) {
+											console.log(data)
+											console.log(Date.now())
+											chart.data.datasets[0].data.push({
+											x: Date.now(),
+											y: data.gal
+											});
+										}
+									}
+								}
+							}
+						});								
 					</script>
 				</div>
 			</div>

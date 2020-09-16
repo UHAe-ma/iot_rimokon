@@ -10,7 +10,7 @@
 // Pixiアプリケーション生成
 let app = new PIXI.Application({
     width: 300,                 // スクリーン(ビュー)横幅 
-    height: 500,                // スクリーン(ビュー)縦幅  
+    height: 480,                // スクリーン(ビュー)縦幅  
     backgroundColor: 0x1099bb,  // 背景色 16進 0xRRGGBB
     autoDensity: true,
 });
@@ -22,8 +22,8 @@ app.stage.sortableChildren = true;
 
 
 let rimokonContainer = new PIXI.Container();
-rimokonContainer.x = 20;    
-rimokonContainer.y = 20;
+rimokonContainer.x = 30;  
+rimokonContainer.y = 30;
 rimokonContainer.zIndex = 10;
 app.stage.addChild(rimokonContainer);
 
@@ -315,16 +315,120 @@ rimokonContainer.addChild(Humid);
 var AC_Temp =  new PIXI.Text('設定温度%', 
                 { 
                 //   fontFamily: 'Arial',   // フォント
+                  fontSize: 40,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                AC_Temp.x = 80;
+                AC_Temp.y = 240;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(AC_Temp);
+
+
+var AUTO_TEXT =  new PIXI.Text('自動', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
                   fontSize: 30,
                   fill : 0x000000,       // 文字色
                 //   stroke: 0xffffff,      // アウトラインの色
                 //   strokeThickness: 3,    // アウトラインの太さ   
                 //   align: 'center',       // 文字揃え(複数行の場合に有効)     
                 });
-                AC_Temp.x = 50;
-                AC_Temp.y = 245;
+                AUTO_TEXT.x = 25;
+                AUTO_TEXT.y = 140;
 // text.text = '0123\n456789';   // テキストの書き換え
-rimokonContainer.addChild(AC_Temp);
+rimokonContainer.addChild(AUTO_TEXT);
+
+var STOP_TEXT =  new PIXI.Text('切', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 30,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                STOP_TEXT.x = 120;
+                STOP_TEXT.y = 140;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(STOP_TEXT);
+
+
+var START_TEXT =  new PIXI.Text('入', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 30,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                START_TEXT.x = 175;
+                START_TEXT.y = 140;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(START_TEXT);
+
+var COOL_TEXT =  new PIXI.Text('冷房', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 25,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                COOL_TEXT.x = 15;
+                COOL_TEXT.y = 350;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(COOL_TEXT);
+
+var DRY_TEXT =  new PIXI.Text('除湿', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 25,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                DRY_TEXT.x = 95;
+                DRY_TEXT.y = 350;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(DRY_TEXT);
+
+
+var HEAT_TEXT =  new PIXI.Text('暖房', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 25,
+                  fill : 0x000000,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                HEAT_TEXT.x = 175;
+                HEAT_TEXT.y = 350;
+// text.text = '0123\n456789';   // テキストの書き換え
+rimokonContainer.addChild(HEAT_TEXT);
+
+
+// デフォルトのフォントでテキストを表示する
+// new PIXI.Text(文字列, テキストスタイル(オブジェクト))
+var LOGO =  new PIXI.Text('MITSHUBISHI', 
+                { 
+                //   fontFamily: 'Arial',   // フォント
+                  fontSize: 30,
+                  fill : 0x008BBB,       // 文字色
+                //   stroke: 0xffffff,      // アウトラインの色
+                //   strokeThickness: 3,    // アウトラインの太さ   
+                //   align: 'center',       // 文字揃え(複数行の場合に有効)     
+                });
+                LOGO.x = 50;
+                LOGO.y = 435;
+// text.text = '0123\n456789';   // テキストの書き換え
+app.stage.addChild(LOGO);
 
 // // 外部フォントをロードする
 // WebFont.load (
@@ -1208,10 +1312,14 @@ var count = 0;
 function animate(delta) {
 
     count = localStorage.getItem("room_temperature");
-    Timetext.text = (count)+"℃";
+    if (count != "undefined"){
+        Timetext.text = (count)+"℃";
+    }
 
     humid = localStorage.getItem("room_humidity");
-    Humid.text = (humid)+"%";
+    if (humid != "undefined"){
+        Humid.text = (humid)+"%";
+    }
 
     ac_set_temp = localStorage.getItem("ac_temperature");
     AC_Temp.text = (ac_set_temp)+"℃";
@@ -1255,6 +1363,8 @@ function animate(delta) {
           break;
       }    
 
+      model = localStorage.getItem("ac_model");
+      LOGO.text = model;
 
     // ぶたがはまってる円を回転する
     ellipse.rotation += 0.2;
