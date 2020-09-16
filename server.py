@@ -201,7 +201,17 @@ def set_ac():
         print(e)
         result="NG"
 
-    return "nothing"
+    #設定したリモコンデータを送信
+    rimokon_data = {
+        "model" : v.model,
+        "mode" : v.mode,
+        "temperature" : v.temperature,
+        "power" : v.power,
+        "gal_autostop": v.gal_autostop
+    }
+
+
+    return rimokon_data
 
 
 # API実装
@@ -282,6 +292,36 @@ def get_LatestRoomInfo():
               "accX":accX,"accY":accY,"accZ":accZ,"gal":gal}
     return make_response(jsonify(result))
 
+
+# 部屋情報データ取得API→Chart.jsで参照するのに使う
+@app.route('/getLatestRimokonInfo/', methods=['GET'])
+def getLatestRimokonInfo():
+    # 現在エアコンの設定データを読み込み
+    try:
+        # 最新データ1件目を取得する.
+        rimokonlist = RimokonInfo.select().order_by(RimokonInfo.recdate.desc()).limit(1)
+        v = rimokonlist[0]
+        print(v.recdate, v.model,v.power,v.mode,v.temperature)
+
+    except RimokonInfo.DoesNotExist:
+        abort(404)
+
+    # エアコンの設定を変更してまだ送信していない場合はsend_flagを1に。
+    send_flag = v.sendflag
+    # これから送信するため、データベースのsendflagを0に
+    v.sendflag = 0
+    v.save()
+
+    rimokon_data = {
+        "model" : v.model,
+        "mode" : v.mode,
+        "temperature" : v.temperature,
+        "power" : v.power,
+        "gal_autostop": v.gal_autostop
+    }
+
+    # デバイスにエアコンの設定を送信
+    return rimokon_data
 
 # ６軸IMUータ取得API→Chart.jsで参照するのに使う
 @app.route('/getGal/<int:numOfRecord>', methods=['GET'])

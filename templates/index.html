@@ -9,7 +9,14 @@
 	onload = function() {
 		kihon();
 		set_THI_Color({{f}});
+		localStorage.setItem('room_temperature', "{{temperature}}");
+		localStorage.setItem('room_humidity', "{{humidity}}");
 
+		localStorage.setItem('ac_mode', "{{mode}}");
+		localStorage.setItem('ac_model', "{{model}}");
+		localStorage.setItem('ac_temperature', "{{set_temp}}");
+		localStorage.setItem('ac_power', "{{power}}");
+		localStorage.setItem('ac_gal_autostop', "{{gal_autostop}}");
 	};
 	
 	function changeColor(idname,color){
@@ -220,9 +227,20 @@
 			}
 		}
 
-		//リモコンのアニメーション
-		console.log("gal",data.gal)
-		console.log("IntervalFunction")
+		console.log("TEST!");
+		$.ajax({
+			url: "/getLatestRimokonInfo",
+			method: "GET",
+		})
+		.done(function(rimokon_data){
+			console.log("model:",rimokon_data.model);
+			$('#len').html(rimokon_data);
+			localStorage.setItem('ac_mode', rimokon_data.mode);
+			localStorage.setItem('ac_model', rimokon_data.model);
+			localStorage.setItem('ac_temperature', rimokon_data.temperature);
+			localStorage.setItem('ac_power', rimokon_data.power);
+			localStorage.setItem('ac_gal_autostop', rimokon_data.gal_autostop);
+		});
 	}, 1000);
 
 </script>
@@ -251,7 +269,11 @@
 					<tr><td class="info">電源</td><td id="ac_power"> {{power}}</td></tr>
 					<tr><td class="info">設定温度</td><td id = set_temperature>{{set_temp}}</td></tr>
 				</table>				
-				<canvas id="sample" width="500" height="500"></canvas>
+				<!-- <canvas id="sample" width="500" height="500"></canvas> -->
+				<main id="app">
+					<!-- ここにPixiの描画領域(Canvas)が入る -->
+				</main>
+				<script type="text/javascript" src="./static/js/rimokon.js"></script>
 			</div>
 			<div class="col-md-6">
 				<div class="col-md-12">

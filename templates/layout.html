@@ -21,6 +21,13 @@
 	<script src="https://unpkg.com/bootstrap-table@1.17.1/dist/bootstrap-table.min.js"></script>
 	<script type="text/javascript" src="./static/js/moment.js"></script>
 	<script type="text/javascript" src="./static/js/chartjs-plugin-streaming.js"></script>
+
+	<!-- pixi.jsの本体の読み込み -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.0.1/pixi.min.js"></script>
+
+	<!-- アニメーション用のライブラリ(GSAP/TweenMax)の読み込み -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/TweenMax.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/gsap/2.0.1/plugins/PixiPlugin.min.js"></script>
 </head>
 
 
@@ -39,7 +46,7 @@
 				<li class="nav-item"> <a class="nav-link" href="/setting">Setting</a> </li>
 			</ul>
 		</div>
-	</nav>
+	</nav>	
 	{% block content %}
 	{% endblock %}
 </body>
