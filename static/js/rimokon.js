@@ -79,14 +79,14 @@ app.stage.addChild(rimokonContainer);
 // 楕円を作る
 let ellipse = new PIXI.Graphics()       // メソッドチェーンで描画するので、;(セミコロン)を付けない   
 .beginFill(0xff0000)                    // endFill()までの描画に対する塗りつぶし色指定
-.drawEllipse(0,0,30,20)                 // (中心のx座標, 中心のy座標, 幅, 高さ)
+.drawEllipse(0,0,10,20)                 // (中心のx座標, 中心のy座標, 幅, 高さ)
 .endFill();                              // ここまでに描いた図形を塗りつぶす
 
 // 基準点を設定(px) 図形(PIXI.Graphicsにはpivotはないので注意)
 ellipse.pivot.x = 15
 ellipse.pivot.y = 10
-ellipse.x = 100;
-ellipse.y = 100;     
+ellipse.x = 150;
+ellipse.y = 120;     
 ellipse.rotation = Math.PI / 6;
 ellipse.zIndex = -1;
 app.stage.addChild(ellipse);

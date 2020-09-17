@@ -331,19 +331,52 @@
 					<script>
 						var ctx3 = document.getElementById('myChart3').getContext('2d');
 						var chart3 = new Chart(ctx3, {
-						type: 'line',
+						type: 'bar',
 						data: {
 							datasets: [{
-							data: []
+							type: 'line', // 追加								
+							label: '室温',
+							borderColor: 'rgb(255, 99, 132)',
+							backgroundColor: 'rgba(255, 99, 132, 0.5)',
+							yAxisID: "y-axis-1", // 追加
 							}, {
-							data: []
+							type: 'bar', // 追加								
+							label: '湿度',
+							borderColor: 'rgb(54, 162, 235)',
+							backgroundColor: 'rgba(54, 162, 235, 0.5)',
+							yAxisID: "y-axis-2", // 追加						
 							}]
 						},
 						options: {
 							scales: {
 							xAxes: [{
 								type: 'realtime'     <!-- Barメソッドを実行すれば棒グラフ -->
-							}]
+							}],
+							yAxes: [{
+								id: "y-axis-1",   // Y軸のID
+								type: "linear",   // linear固定 
+								position: "left", // どちら側に表示される軸か？
+								ticks: {          // スケール
+									max: 45,
+									min: 0,
+								},
+								scaleLabel: {   // 軸ラベル
+									display : true,
+									labelString: '温度(℃)'
+			                    },
+							}, {
+								id: "y-axis-2",
+								type: "linear", 
+								position: "right",
+								ticks: {
+									max: 100,
+									min: 0,
+								},
+								scaleLabel: {   // 軸ラベル
+									display : true,
+									labelString: '湿度(%)'
+			                    },
+							}],
 							},
 							plugins: {
 									streaming: {            
@@ -361,6 +394,10 @@
 											chart.data.datasets[0].data.push({
 											x: Date.now(),
 											y: data.temperature
+											});
+											chart.data.datasets[1].data.push({
+											x: Date.now(),
+											y: data.humidity
 											});
 										}
 									}
@@ -388,9 +425,8 @@
 						type: 'line',
 						data: {
 							datasets: [{
-							data: []
-							}, {
-							data: []
+								type: 'line', // 追加								
+								label: 'Gal',
 							}]
 						},
 						options: {
