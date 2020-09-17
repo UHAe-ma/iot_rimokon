@@ -96,7 +96,7 @@ def check():
         yaw = request.json['yaw']
 
         #galを計算
-        gal = abs(math.sqrt(pow(accX,2)+pow(accY,2)+pow(accZ,2)) - 1) * 980.665
+        gal = math.sqrt(pow(accX,2)+pow(accY,2)+pow(accZ,2)) * 980.665
         print("gal",gal)
         print("温度:",temp,"湿度:",humid)
 
