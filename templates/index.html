@@ -219,7 +219,7 @@
 		//地震だ！
 		var earth_quake = 0
 		if( data.gal != "undefined"){
-			if (data.gal > 1090 ) {
+			if (data.gal > 110 ) {
 				console.log("地震!");
 				earth_quake = 1
 			}
@@ -337,7 +337,7 @@
 							type: 'line', // 追加								
 							label: '室温',
 							borderColor: 'rgb(255, 99, 132)',
-							backgroundColor: 'rgba(255, 99, 132, 0.5)',
+							backgroundColor: 'rgba(0, 0, 0, 0.0)',
 							yAxisID: "y-axis-1", // 追加
 							}, {
 							type: 'bar', // 追加								
@@ -433,6 +433,12 @@
 							scales: {
 							xAxes: [{
 								type: 'realtime'     <!-- Barメソッドを実行すれば棒グラフ -->
+							}],
+							yAxes: [{
+								ticks: {          // スケール
+									suggestedMax: 120,
+									suggestedMin: 0,
+								},								
 							}]
 							},
 							plugins: {
