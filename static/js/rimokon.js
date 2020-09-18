@@ -20,12 +20,50 @@ el.appendChild(app.view);
 
 app.stage.sortableChildren = true;
 
-
 let rimokonContainer = new PIXI.Container();
 rimokonContainer.x = 30;  
 rimokonContainer.y = 30;
 rimokonContainer.zIndex = 10;
 app.stage.addChild(rimokonContainer);
+
+// // 外部フォントをロードする
+WebFont.load (
+    {
+        // // Google Fontsの場合
+        // google:
+        // {
+        //     families: ['Noto+Serif+JP']   
+        // },
+        // カスタム(自分のサーバーにファイルがあるとか)の場合
+        custom:
+        {
+            families: ['DSEG14Modern-Bold'],
+            urls: ['/static/css/fonts.css']    // @font-faceを定義したcssのURL
+        },
+        active: () =>
+        {
+            // // フォント読み込み成功時
+            // // Google Fontsから読み込んだフォントでテキストを表示する(なぜか漢字が読み込まれない)
+            // let text2 =  new PIXI.Text('あいうアイウABC漢字', 
+            //         { 
+            //             fontFamily: 'Noto Serif JP',
+            //             fontSize: 50,
+            //             fill : 0x000000,      // 文字色     
+            //         });
+            // text2.x = 10;
+            // text2.y = 100;
+            // app.stage.addChild(text2);
+    
+            console.log('font loaded!');
+            // カスタムフォントでテキストを表示する
+        },
+        inactive: () =>
+        {
+            // フォント読み込み失敗時
+            console.log('font loading failed');
+        }
+    });
+
 
 /** =======================================================================================
  * 1.4 スプライトや図形を表示する
@@ -430,53 +468,17 @@ var LOGO =  new PIXI.Text('MITSHUBISHI',
 // text.text = '0123\n456789';   // テキストの書き換え
 app.stage.addChild(LOGO);
 
-// // 外部フォントをロードする
-// WebFont.load (
-// {
-//     // Google Fontsの場合
-//     google:
-//     {
-//         families: ['Noto+Serif+JP']   
-//     },
-//     // カスタム(自分のサーバーにファイルがあるとか)の場合
-//     custom:
-//     {
-//         families: ['幻ノにじみ明朝'],
-//         urls: ['./css/font.css']    // @font-faceを定義したcssのURL
-//     },
-//     active: () =>
-//     {
-//         // フォント読み込み成功時
-//         // Google Fontsから読み込んだフォントでテキストを表示する(なぜか漢字が読み込まれない)
-//         let text2 =  new PIXI.Text('あいうアイウABC漢字', 
-//                 { 
-//                     fontFamily: 'Noto Serif JP',
-//                     fontSize: 50,
-//                     fill : 0x000000,      // 文字色     
-//                 });
-//         text2.x = 10;
-//         text2.y = 100;
-//         app.stage.addChild(text2);
 
-//         // カスタムフォントでテキストを表示する
-//         let text3 =  new PIXI.Text('あいうアイウABC漢字', 
-//                 { 
-//                     fontFamily: '幻ノにじみ明朝',
-//                     fontSize: 50,
-//                     fill : 0x000000,      // 文字色     
-//                 });
-//         text3.x = 10;
-//         text3.y = 200;
-//         app.stage.addChild(text3);
-//     },
-//     inactive: () =>
-//     {
-//         // フォント読み込み失敗時
-//         console.log('font loading failed');
-//     }
+
+// var DSEG =  new PIXI.Text('HELLO', 
+// { 
+//     fontFamily: 'DSEG14Modern-Bold',
+//     fontSize: 50,
+//     fill : 0x000000,      // 文字色     
 // });
-
-
+// DSEG.x = 150;
+// DSEG.y = 150;
+// rimokonContainer.addChild(DSEG);
 
 
 /** =======================================================================================
@@ -1314,6 +1316,7 @@ function animate(delta) {
     count = localStorage.getItem("room_temperature");
     if (count != "undefined"){
         Timetext.text = (count)+"℃";
+        Timetext.style.fontFamily = 'DSEG14Modern-Bold';
     }
 
     humid = localStorage.getItem("room_humidity");

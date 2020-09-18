@@ -1,4 +1,5 @@
 @font-face {
-	font-family: "7seg";
-	src: url("./static/css/DSEG7Classic-Bold.woff") format("woff");
+	font-family: 'DSEG14Modern-Bold';
+	src: url('DSEG14-Modern/DSEG14Modern-Bold.woff') format('woff');
+	src: url('DSEG14-Modern/DSEG14Modern-Bold.woff2') format('woff2');
 }

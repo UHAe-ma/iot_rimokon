@@ -1,7 +1,17 @@
 {% extends "layout.html" %}
 {% block content %}
 <h1>推移</h1>
-<canvas id="myChart"></canvas>
+<div class="container"> 
+	<div class="row">
+		<div class="col-md-12">
+			<canvas id="myChart"></canvas>
+		</div>
+		<div class="col-md-12">
+			<canvas id="myChart2"></canvas>
+		</div>
+	</div>	
+</div>
+
 <script>
 $(function () {
 	graph();
@@ -14,6 +24,14 @@ $(function () {
 				data: data,
 				options: {
 					scales: {
+						xAxes: [{
+							ticks: {
+							callback: function(label, index, labels) {
+							let duration = moment(label, "x").format("hh:mm:ss");
+							return duration;
+							}
+						}
+						}],
 						yAxes: [
 							{id:"y-axis-1",
 								typee:"linear",
@@ -31,10 +49,8 @@ $(function () {
 		});
 	}
 });
-</script>
 
-<canvas id="myChart2"></canvas>
-<script>
+
 $(function () {
 	graph2();
 	function graph2() {
@@ -46,12 +62,20 @@ $(function () {
 				data: data,
 				options: {
 					scales: {
+						xAxes: [{
+							ticks: {
+							callback: function(label, index, labels) {
+							let duration = moment(label, "x").format("hh:mm:ss");
+							return duration;
+							}
+						}
+						}],
 						yAxes: [
 							{id:"y-axis-1",
 								typee:"linear",
 								position:"left",
 								ticks: {
-									suggestedMax: 10000,
+									suggestedMax: 120,
 									suggestedMin: 0,
 									stepSize: 1000
 								}
